@@ -2,7 +2,11 @@ using UnityEngine;
 
 public class QuestionSetter : MonoBehaviour
 {
+    [Header("関連するスクリプトの参照")]
+    [Tooltip("GameMasterの参照")]
     [SerializeField] private GameMaster gameMaster;
+    [Tooltip("PanelCreatorの参照")]
+    [SerializeField] private PanelCreator panelCreator;
 
     private int difficulty;
     public int currentQuestionIndex = 0; // 現在の問題のインデックス
@@ -12,25 +16,26 @@ public class QuestionSetter : MonoBehaviour
     public float currentQuestionScore; // 現在の問題のスコア
     public KeyCode[] CorrectAnswers; // 現在の問題の正解のキーコード
     public int lives; // プレイヤーのライフ
-    public int[] LivesByDifficulty = { 5, 3, 1 }; // 難易度ごとのライフ数
+    private int[] LivesByDifficulty = { 5, 3, 1 }; // 難易度ごとのライフ数
 
     private int[] NumOfQs = { 15, 20, 25 }; // 難易度ごとの出題数
     private float[] TimeLimits = { 10f, 7f, 5f }; // 難易度ごとの制限時間
 
-    // アルファベットのキーコードのリスト
-    public KeyCode[] AnswerKeys = new KeyCode[]
+    // 数字とアルファベットのキーコードのリスト
+    private KeyCode[] AnswerKeys = new KeyCode[]
     {
-        KeyCode.A, KeyCode.B, KeyCode.C, KeyCode.D, KeyCode.E,
-        KeyCode.F, KeyCode.G, KeyCode.H, KeyCode.I, KeyCode.J,
-        KeyCode.K, KeyCode.L, KeyCode.M, KeyCode.N, KeyCode.O,
-        KeyCode.P, KeyCode.Q, KeyCode.R, KeyCode.S, KeyCode.T,
-        KeyCode.U, KeyCode.V, KeyCode.W, KeyCode.X, KeyCode.Y,
-        KeyCode.Z
+        KeyCode.Alpha1, KeyCode.Alpha2, KeyCode.Alpha3, KeyCode.Alpha4, KeyCode.Alpha5, KeyCode.Alpha6, KeyCode.Alpha7, KeyCode.Alpha8, KeyCode.Alpha9, KeyCode.Alpha0,
+        KeyCode.Q, KeyCode.W, KeyCode.E, KeyCode.R, KeyCode.T, KeyCode.Y, KeyCode.U, KeyCode.I, KeyCode.O, KeyCode.P,
+        KeyCode.A, KeyCode.S, KeyCode.D, KeyCode.F, KeyCode.G, KeyCode.H, KeyCode.J, KeyCode.K, KeyCode.L,
+        KeyCode.Z, KeyCode.X, KeyCode.C, KeyCode.V, KeyCode.B, KeyCode.N, KeyCode.M
     };
+
+    private int minQuestionNumber; // 問題番号の最小値
+    private int maxQuestionNumber; // 問題番号の最大値
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    void Awake()
     {
         difficulty = gameMaster.difficulty; // GameMasterから難易度を取得
         currentQuestionIndex = 0;
@@ -41,6 +46,35 @@ public class QuestionSetter : MonoBehaviour
             timeRemaining = timeLimitPerQuestion; // 最初の問題の残り時間を設定
             lives = LivesByDifficulty[difficulty]; // 難易度に応じたライフ数を設定
             gameMaster.livesRemaining = lives; // GameMasterの残りライフを設定
+            if (difficulty == 0)
+            {
+                int questionSetNumber = Random.Range(0, 4); // 0から3のランダムな整数を生成
+                if (questionSetNumber == 0)
+                {
+                    minQuestionNumber = 0;
+                    maxQuestionNumber = 9;
+                }
+                else if (questionSetNumber == 1)
+                {
+                    minQuestionNumber = 10;
+                    maxQuestionNumber = 19;
+                }
+                else if (questionSetNumber == 2)
+                {
+                    minQuestionNumber = 20;
+                    maxQuestionNumber = 28;
+                }
+                else
+                {
+                    minQuestionNumber = 29;
+                    maxQuestionNumber = 35;
+                }
+            }
+            else
+            {
+                minQuestionNumber = 0;
+                maxQuestionNumber = 35;
+            }
             SetNextQuestion(); // 最初の問題を設定するメソッドを呼び出す
             gameMaster.isGameStarted = true; // ゲーム開始フラグを立てる
             Debug.Log($"ゲームが開始されました。難易度: {difficulty}, 出題数: {numberOfQuestions}, 制限時間: {timeLimitPerQuestion}秒, ライフ: {lives}");
@@ -54,14 +88,10 @@ public class QuestionSetter : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void FinishQuestion()
     {
+        panelCreator.DestroyPanel(); // 現在の問題のパネルを破壊する
+
         if (currentQuestionIndex < numberOfQuestions)
         {
             // 次の問題を出題する処理をここに追加
@@ -75,7 +105,7 @@ public class QuestionSetter : MonoBehaviour
         else
         {
             Debug.Log("すべての問題が出題されました。");
-            // ゲーム終了の処理をここに追加
+            gameMaster.FinishGame(1); // ゲームを終了するメソッドを呼び出す
         }
     }
 
@@ -104,27 +134,31 @@ public class QuestionSetter : MonoBehaviour
 
     public void SetNextQuestion()
     {
-        // 次の問題を設定する処理をここに追加
-        CorrectAnswers = new KeyCode[difficulty + 1];
-        CorrectAnswers[0] = AnswerKeys[Random.Range(0, AnswerKeys.Length)]; // ランダムに正解を設定
-        if (difficulty >= 1)
+        // 指定の問題番号内でランダムに正解を設定
+        // 正解が重複しないようにする
+        int numberOfAnswers = Random.Range(1, difficulty + 2); // 正解の数をランダムに決定（難易度に応じて1～difficulty+1）
+        CorrectAnswers = new KeyCode[numberOfAnswers];
+        for (int i = 0; i < CorrectAnswers.Length; i++)
         {
-            CorrectAnswers[1] = AnswerKeys[Random.Range(0, AnswerKeys.Length)]; // 難易度が中級以上の場合、もう一つ正解を設定
-            // 正解のキーが重複しないようにする
-            while (CorrectAnswers[1] == CorrectAnswers[0])
+            while (true)
             {
-                CorrectAnswers[1] = AnswerKeys[Random.Range(0, AnswerKeys.Length)];
-            }
-            if (difficulty >= 2)
-            {
-                CorrectAnswers[2] = AnswerKeys[Random.Range(0, AnswerKeys.Length)]; // 難易度が上級の場合、さらにもう一つ正解を設定
-                // 正解のキーが重複しないようにする
-                while (CorrectAnswers[2] == CorrectAnswers[0] || CorrectAnswers[2] == CorrectAnswers[1])
+                int randomIndex = Random.Range(minQuestionNumber, maxQuestionNumber + 1);
+                KeyCode randomKey = AnswerKeys[randomIndex];
+                if (!System.Array.Exists(CorrectAnswers, key => key == randomKey))
                 {
-                    CorrectAnswers[2] = AnswerKeys[Random.Range(0, AnswerKeys.Length)];
+                    CorrectAnswers[i] = randomKey;
+                    break;
                 }
             }
         }
+
+        // PanelCreatorに正解の文字を渡してパネルを生成する
+        string[] answerCharactors = new string[CorrectAnswers.Length];
+        for (int i = 0; i < CorrectAnswers.Length; i++)
+        {
+            answerCharactors[i] = CorrectAnswers[i].ToString().Replace("Alpha", ""); // KeyCodeから"Alpha"を取り除いて文字を取得
+        }
+        panelCreator.CreatePanel(CorrectAnswers.Length, answerCharactors);
 
         // 次の問題の内容をコンソールに表示する
         Debug.Log($"次の問題が設定されました。正解のキーコード: {string.Join(", ", CorrectAnswers)}");
