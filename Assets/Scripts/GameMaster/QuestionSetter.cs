@@ -18,8 +18,8 @@ public class QuestionSetter : MonoBehaviour
     public int lives; // プレイヤーのライフ
     private int[] LivesByDifficulty = { 5, 3, 1 }; // 難易度ごとのライフ数
 
-    private int[] NumOfQs = { 15, 20, 25 }; // 難易度ごとの出題数
-    private float[] TimeLimits = { 10f, 7f, 5f }; // 難易度ごとの制限時間
+    private int[] NumOfQs = { 10, 15, 20 }; // 難易度ごとの出題数
+    private float[] TimeLimits = { 10f, 8f, 6f }; // 難易度ごとの制限時間
 
     // 数字とアルファベットのキーコードのリスト
     private KeyCode[] AnswerKeys = new KeyCode[]
