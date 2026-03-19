@@ -30,7 +30,16 @@ public class PanelCreator : MonoBehaviour
             if (panelScript != null)
             {
                 int shutterType = Random.Range(0, gameMaster.difficulty + 1); // シャッターの種類をランダムに選択
-                panelScript.SetAnswerCharactor(AnswerCharactors[i], questionSetter.timeLimitPerQuestion, shutterType);
+                int sign;
+                if (gameMaster.difficulty == 0)
+                {
+                    sign = 1;
+                }
+                else
+                {
+                    sign = Random.Range(0, 2) * 2 - 1; // ランダムに-1か1を選択
+                }
+                panelScript.SetAnswerCharactor(AnswerCharactors[i], questionSetter.timeLimitPerQuestion, shutterType, sign);
             }
             else
             {

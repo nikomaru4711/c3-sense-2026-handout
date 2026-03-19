@@ -35,7 +35,7 @@ public class QuestionSetter : MonoBehaviour
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Awake()
+    void Start()
     {
         difficulty = gameMaster.difficulty; // GameMaster‚©‚ç“ïˆÕ“x‚ðŽæ“¾
         currentQuestionIndex = 0;

@@ -35,7 +35,7 @@ public class GameMaster : MonoBehaviour
     public int score; // プレイヤーのスコア
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    void Awake()
     {
         questionSetter.enabled = false; // ゲーム開始前はQuestionSetterを無効にする
         playUIPanel.SetActive(false); // プレイ中UIを非表示にする
