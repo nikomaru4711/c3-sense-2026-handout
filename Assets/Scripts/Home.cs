@@ -30,12 +30,6 @@ public class Home : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        // ボタンにクリックイベントを追加
-        startButton.GetComponent<Button>().onClick.AddListener(OnStartButtonClicked);
-        biginner.GetComponent<Button>().onClick.AddListener(() => OnDifficultyButtonClicked(0));
-        intermediate.GetComponent<Button>().onClick.AddListener(() => OnDifficultyButtonClicked(1));
-        advanced.GetComponent<Button>().onClick.AddListener(() => OnDifficultyButtonClicked(2));
-
         // スタートボタンを有効にする
         startButton.SetActive(true);
 
@@ -49,7 +43,7 @@ public class Home : MonoBehaviour
     }
 
     // スタートボタンがクリックされたときの処理
-    private void OnStartButtonClicked()
+    public void OnStartButtonClicked()
     {
         // スタートボタンを非表示にする
         startButton.SetActive(false);
@@ -61,7 +55,7 @@ public class Home : MonoBehaviour
     }
 
     // 難易度ボタンがクリックされたときの処理
-    private void OnDifficultyButtonClicked(int difficulty)
+    public void OnDifficultyButtonClicked(int difficulty)
     {
         // ゲームマスターに難易度を設定する
         gameMaster.difficulty = difficulty;

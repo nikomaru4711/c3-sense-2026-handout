@@ -12,12 +12,12 @@ public class QuestionSetter : MonoBehaviour
     public int currentQuestionIndex = 0; // 現在の問題のインデックス
     public int numberOfQuestions; // 出題する問題の数
     public float timeLimitPerQuestion; // 1問あたりの制限時間（秒）
+    public int penaltyPoints = 30; // 不正解のキーが押されたときの減点ポイント
     public float timeRemaining; // 現在の問題の残り時間（秒）
     public float currentQuestionScore; // 現在の問題のスコア
     public KeyCode[] CorrectAnswers; // 現在の問題の正解のキーコード
     public int lives; // プレイヤーのライフ
     private int[] LivesByDifficulty = { 5, 3, 1 }; // 難易度ごとのライフ数
-
     private int[] NumOfQs = { 10, 15, 20 }; // 難易度ごとの出題数
     private float[] TimeLimits = { 10f, 8f, 6f }; // 難易度ごとの制限時間
 
@@ -29,6 +29,8 @@ public class QuestionSetter : MonoBehaviour
         KeyCode.A, KeyCode.S, KeyCode.D, KeyCode.F, KeyCode.G, KeyCode.H, KeyCode.J, KeyCode.K, KeyCode.L,
         KeyCode.Z, KeyCode.X, KeyCode.C, KeyCode.V, KeyCode.B, KeyCode.N, KeyCode.M
     };
+
+    private bool[] PlayerInputs = new bool[36]; // プレイヤーの入力状態を管理する配列
 
     private int minQuestionNumber; // 問題番号の最小値
     private int maxQuestionNumber; // 問題番号の最大値
@@ -109,27 +111,57 @@ public class QuestionSetter : MonoBehaviour
         }
     }
 
-    public void UpdateScore(float timeRemaining, float score)
+    public void UpdateScore(float timeRemaining, float questionScore)
     {
         // スコアの更新処理
-        gameMaster.score += (int)(score * timeRemaining);
+        int score = (int)(questionScore); // 問題のスコアを整数に変換
+        gameMaster.score += score; // GameMasterのスコアを更新
         Debug.Log($"スコアが更新されました。現在のスコア: {gameMaster.score}");
     }
 
     public void CheckAnswer()
     {
-        // プレイヤーの入力と正解を比較する処理
-        foreach (KeyCode correctKey in CorrectAnswers)
+        // プレイヤーの入力が変化したかどうかをチェック
+        // 新しく押されたキーが不正解の場合、スコアを減点する
+        // 完全一致の場合正解とする
+
+        int correctInputCount = 0; // プレイヤーが正解のキーを押した個数
+
+        for (int i = 0; i < AnswerKeys.Length; i++)
         {
-            if (!Input.GetKey(correctKey))
+            if (Input.GetKey(AnswerKeys[i]))
             {
-                return;
+                if (System.Array.Exists(CorrectAnswers, key => key == AnswerKeys[i]))
+                {
+                    correctInputCount++; // プレイヤーが正解のキーを押した個数を増やす
+                }
+
+                if (!PlayerInputs[i])
+                {
+                    if (!System.Array.Exists(CorrectAnswers, key => key == AnswerKeys[i]))
+                    {
+                        gameMaster.score = Mathf.Max(0, gameMaster.score - penaltyPoints); // 不正解のキーが押された場合はスコアを減点（最低0点まで）
+                        Debug.Log($"不正解のキーが押されました: {AnswerKeys[i]}. スコアが減点されました。現在のスコア: {gameMaster.score}");
+                    }
+
+                    PlayerInputs[i] = true; // プレイヤーの入力状態を更新
+                }
+            }
+            else if (PlayerInputs[i])
+            {
+                PlayerInputs[i] = false; // プレイヤーの入力状態を更新
             }
         }
 
-        UpdateScore(timeRemaining, 100f);
-        Debug.Log("正解です！");
-        FinishQuestion(); // 次の問題を設定する
+        if (correctInputCount == CorrectAnswers.Length)
+        {
+            // プレイヤーがすべての正解のキーを押した場合は正解とする
+            int numberOfCorrectAnswers = CorrectAnswers.Length;
+
+            UpdateScore(timeRemaining, 100f); // 正解の場合はスコアを加算
+            Debug.Log("正解です！");
+            FinishQuestion(); // 次の問題を設定する
+        }
     }
 
     public void SetNextQuestion()
