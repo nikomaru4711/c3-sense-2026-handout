@@ -44,18 +44,11 @@ public class PanelScript : MonoBehaviour
 
     float GetShutterValue(float t, int type)
     {
-        if (type == 0)
-        {
-            return Mathf.Min(1f, Mathf.Sin(t * Mathf.PI / 1.6f));
-        }
-        else if (type == 1)
-        {
-            return Mathf.Min(1f, Mathf.Pow(t * 1.25f, 5f));
-        }
-        else
-        {
-            float val = 0.4f * Mathf.Sin(2.5f * Mathf.PI * t) + 1.25f * t;
-            return Mathf.Clamp01(val);
-        }
+        return 0f; // この行は消して、実際のシャッターパターンの関数を完成させてください
+        // ---------------------------------------------
+        //
+        // 　　　　　　コードライティング
+        //
+        // ---------------------------------------------
     }
 }

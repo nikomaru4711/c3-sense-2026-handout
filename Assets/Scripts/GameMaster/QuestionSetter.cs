@@ -48,35 +48,15 @@ public class QuestionSetter : MonoBehaviour
             timeRemaining = timeLimitPerQuestion; // 最初の問題の残り時間を設定
             lives = LivesByDifficulty[difficulty]; // 難易度に応じたライフ数を設定
             gameMaster.livesRemaining = lives; // GameMasterの残りライフを設定
-            if (difficulty == 0)
-            {
-                int questionSetNumber = Random.Range(0, 4); // 0から3のランダムな整数を生成
-                if (questionSetNumber == 0)
-                {
-                    minQuestionNumber = 0;
-                    maxQuestionNumber = 9;
-                }
-                else if (questionSetNumber == 1)
-                {
-                    minQuestionNumber = 10;
-                    maxQuestionNumber = 19;
-                }
-                else if (questionSetNumber == 2)
-                {
-                    minQuestionNumber = 20;
-                    maxQuestionNumber = 28;
-                }
-                else
-                {
-                    minQuestionNumber = 29;
-                    maxQuestionNumber = 35;
-                }
-            }
-            else
-            {
-                minQuestionNumber = 0;
-                maxQuestionNumber = 35;
-            }
+
+            // 難易度に応じた出題範囲を設定
+            // ---------------------------------------------
+            //
+            // 　　　　　　コードライティング
+            //
+            // ---------------------------------------------
+
+
             SetNextQuestion(); // 最初の問題を設定するメソッドを呼び出す
             gameMaster.isGameStarted = true; // ゲーム開始フラグを立てる
             Debug.Log($"ゲームが開始されました。難易度: {difficulty}, 出題数: {numberOfQuestions}, 制限時間: {timeLimitPerQuestion}秒, ライフ: {lives}");
@@ -168,21 +148,13 @@ public class QuestionSetter : MonoBehaviour
     {
         // 指定の問題番号内でランダムに正解を設定
         // 正解が重複しないようにする
-        int numberOfAnswers = Random.Range(1, difficulty + 2); // 正解の数をランダムに決定（難易度に応じて1～difficulty+1）
-        CorrectAnswers = new KeyCode[numberOfAnswers];
-        for (int i = 0; i < CorrectAnswers.Length; i++)
-        {
-            while (true)
-            {
-                int randomIndex = Random.Range(minQuestionNumber, maxQuestionNumber + 1);
-                KeyCode randomKey = AnswerKeys[randomIndex];
-                if (!System.Array.Exists(CorrectAnswers, key => key == randomKey))
-                {
-                    CorrectAnswers[i] = randomKey;
-                    break;
-                }
-            }
-        }
+        // 正解の数をランダムに決定（難易度に応じて1～difficulty+1）
+        // ---------------------------------------------
+        //
+        // 　　　　　　コードライティング
+        //
+        // ---------------------------------------------
+
 
         // PanelCreatorに正解の文字を渡してパネルを生成する
         string[] answerCharactors = new string[CorrectAnswers.Length];

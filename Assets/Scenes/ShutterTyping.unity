@@ -847,8 +847,8 @@ Camera:
   m_GameObject: {fileID: 763049006}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.7882353, g: 0.99215686, b: 1, a: 1}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -1634,8 +1634,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06e1753522b863142915e56fe08387b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameMaster
-  questionSetter: {fileID: 1297374469}
-  panelCreator: {fileID: 1393740811}
+  questionSetter: {fileID: 0}
+  panelCreator: {fileID: 0}
   playUIPanel: {fileID: 1739387442}
   resultUIPanel: {fileID: 327509261}
   timeLimitText: {fileID: 601483885}
@@ -1664,6 +1664,7 @@ MonoBehaviour:
   currentQuestionIndex: 0
   numberOfQuestions: 0
   timeLimitPerQuestion: 0
+  penaltyPoints: 30
   timeRemaining: 0
   currentQuestionScore: 0
   CorrectAnswers: 
@@ -1976,19 +1977,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1502563898}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 700625115}
-        m_TargetAssemblyTypeName: Home, Assembly-CSharp
-        m_MethodName: OnDifficultyButtonClicked
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 1
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1502563898
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2612,19 +2601,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2098565003}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 700625115}
-        m_TargetAssemblyTypeName: Home, Assembly-CSharp
-        m_MethodName: OnDifficultyButtonClicked
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 2
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &2098565003
 MonoBehaviour:
   m_ObjectHideFlags: 0
