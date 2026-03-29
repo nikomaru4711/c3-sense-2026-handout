@@ -1623,7 +1623,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameMaster
   questionSetter: {fileID: 0}
-  panelCreator: {fileID: 0}
+  panelCreator: {fileID: 1393740811}
   playUIPanel: {fileID: 1739387442}
   resultUIPanel: {fileID: 327509261}
   timeLimitText: {fileID: 601483885}
